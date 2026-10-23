@@ -14,6 +14,7 @@ const WEAPON_EMOJIS = [
   { emoji: '💥', label: 'Escopeta' },
   { emoji: '🎯', label: 'Fusil' },
   { emoji: '🔸', label: 'Balas' },
+  { emoji: '🔪', label: 'Melee' },
 ]
 const EmojiOptions = () => <>{WEAPON_EMOJIS.map(e => <option key={e.emoji} value={e.emoji}>{e.emoji} {e.label}</option>)}</>
 const TONE: Record<WeaponMove['kind'], string> = { ingreso: 'good', retiro: 'bad', compra: 'good', venta: 'bad' }
