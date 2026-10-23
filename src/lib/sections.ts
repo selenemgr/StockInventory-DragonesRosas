@@ -1,0 +1,20 @@
+/** Nombre legible de cada tabla/sección para el registro de actividad. */
+export const SECTION_LABEL: Record<string, string> = {
+  sesion: '🔐 Sesión',
+  users: '👤 Miembros',
+  finance: '💰 Finanzas',
+  drugs: '🌿 Drogas',
+  drug_sales: '🌿 Drogas · ingreso/venta',
+  drug_materials: '🌱 Semillas y hojas',
+  drug_material_moves: '🌱 Semillas y hojas · movimientos',
+  weapons: '🔫 Armas · stock',
+  weapon_moves: '🔫 Armas · movimientos',
+  weapon_parts: '🛠️ Armas · fabricación',
+  weapon_part_moves: '🛠️ Armas · fabricación (mov.)',
+  heists: '💎 Atracos',
+  houses: '🏠 Casas',
+  materials: '♻️ Materiales',
+  fines: '🚔 Multas',
+  inventory: '🎒 Inventario',
+}
+export const sectionLabel = (e: string) => SECTION_LABEL[e] ?? e
