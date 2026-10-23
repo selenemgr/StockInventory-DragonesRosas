@@ -72,3 +72,32 @@ export function MoneySelect({ value, onChange, title = 'Tipo de dinero' }: { val
 export const MoneyTag = ({ type }: { type: MoneyType }) => (
   <span className={`tag ${MONEY_TYPES[type ?? 'limpio'].cls}`}>{MONEY_TYPES[type ?? 'limpio'].emoji} {MONEY_TYPES[type ?? 'limpio'].label}</span>
 )
+
+/** Nota editable: muestra el texto (o el icono ⓘ con tooltip) y un lápiz para modificarla. */
+export function NoteCell({ value, onSave, tooltip = false }: { value: string | null | undefined; onSave: (note: string) => void; tooltip?: boolean }) {
+  const [editing, setEditing] = useState(false)
+  const [draft, setDraft] = useState('')
+  const start = () => { setDraft(value ?? ''); setEditing(true) }
+  const save = () => { if (draft !== (value ?? '')) onSave(draft); setEditing(false) }
+
+  if (editing)
+    return (
+      <span className="note-edit">
+        <input
+          autoFocus
+          value={draft}
+          placeholder="Nota"
+          onChange={e => setDraft(e.target.value)}
+          onKeyDown={e => { if (e.key === 'Enter') save(); if (e.key === 'Escape') setEditing(false) }}
+        />
+        <button type="button" className="ghost" title="Guardar" onClick={save}>✓</button>
+        <button type="button" className="ghost" title="Cancelar" onClick={() => setEditing(false)}>✕</button>
+      </span>
+    )
+  return (
+    <span className="note-edit">
+      {tooltip ? <Info text={value || 'Sin notas'} /> : <span>{value}</span>}
+      <button type="button" className="ghost" title="Editar nota" onClick={start}>✎</button>
+    </span>
+  )
+}

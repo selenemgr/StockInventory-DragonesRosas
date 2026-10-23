@@ -3,7 +3,7 @@ import { useSession } from '../context/Session'
 import { useTable } from '../lib/useTable'
 import { dateTime, money } from '../lib/format'
 import type { Fine } from '../lib/types'
-import { Del, Empty, Stat, UserSelect } from '../components/ui'
+import { Del, Empty, NoteCell, Stat, UserSelect } from '../components/ui'
 
 export default function Multas() {
   const { users, userName } = useSession()
@@ -40,7 +40,7 @@ export default function Multas() {
           {fines.map(r => (
             <tr key={r.id}>
               <td>{dateTime(r.created_at)}</td><td>{userName(r.user_id)}</td>
-              <td>{money(r.amount)}</td><td>{r.reason}</td>
+              <td>{money(r.amount)}</td><td><NoteCell value={r.reason} onSave={reason => update(r.id, { reason }, 'editar motivo')} /></td>
               <td>
                 <input type="checkbox" checked={r.paid} onChange={e => update(r.id, { paid: e.target.checked }, e.target.checked ? 'marcar multa pagada' : 'marcar multa pendiente')} />
               </td>

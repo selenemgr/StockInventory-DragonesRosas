@@ -3,7 +3,7 @@ import { useSession } from '../context/Session'
 import { useTable } from '../lib/useTable'
 import { dateTime, money } from '../lib/format'
 import type { House } from '../lib/types'
-import { Del, Empty, MoneyTag, Stat } from '../components/ui'
+import { Del, Empty, NoteCell, MoneyTag, Stat } from '../components/ui'
 
 export default function Casas() {
   const { user, userName } = useSession()
@@ -36,7 +36,7 @@ export default function Casas() {
           {houses.rows.map(r => (
             <tr key={r.id}>
               <td>{dateTime(r.created_at)}</td><td>{userName(r.user_id)}</td><td>🏠 {r.qty}</td><td>{money(r.loot)}</td><td><MoneyTag type="limpio" /></td>
-              <td>{r.note}</td><td><Del onClick={() => houses.remove(r.id)} /></td>
+              <td><NoteCell value={r.note} onSave={note => houses.update(r.id, { note }, 'editar nota')} /></td><td><Del onClick={() => houses.remove(r.id)} /></td>
             </tr>
           ))}
         </tbody>

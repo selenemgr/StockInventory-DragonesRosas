@@ -106,3 +106,5 @@ code { background: #1f121a; padding: 2px 6px; border-radius: 4px; }
 .muted { color: var(--muted); }
 .stats-split { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; align-items: start; margin-bottom: 8px; }
 .stats-split .stats { margin-bottom: 0; }
+.note-edit { display: inline-flex; align-items: center; gap: 6px; }
+.note-edit input { min-width: 160px; padding: 4px 8px; }

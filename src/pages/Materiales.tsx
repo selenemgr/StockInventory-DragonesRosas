@@ -3,7 +3,7 @@ import { useSession } from '../context/Session'
 import { useTable } from '../lib/useTable'
 import { dateTime } from '../lib/format'
 import type { Material } from '../lib/types'
-import { Del, Empty, Info, Stat } from '../components/ui'
+import { Del, Empty, NoteCell, Stat } from '../components/ui'
 
 const MATERIALS: Record<Material['material'], { emoji: string; label: string }> = {
   chatarra: { emoji: '🔩', label: 'Chatarra' },
@@ -14,7 +14,7 @@ const TONE: Record<Material['kind'], string> = { ingreso: 'good', retiro: 'bad' 
 
 export default function Materiales() {
   const { user, userName } = useSession()
-  const { rows, error, insert, remove } = useTable<Material>('materials')
+  const { rows, error, insert, update, remove } = useTable<Material>('materials')
   const [kind, setKind] = useState<Material['kind']>('ingreso')
   const [material, setMaterial] = useState<Material['material']>('chatarra')
   const [qty, setQty] = useState('')
@@ -60,7 +60,7 @@ export default function Materiales() {
               <td><span className={`tag ${TONE[r.kind]}`}>{r.kind}</span></td>
               <td>{MATERIALS[r.material].emoji} {MATERIALS[r.material].label}</td>
               <td className={`amt ${TONE[r.kind]}`}>{r.kind === 'ingreso' ? '+' : '−'}{r.qty}</td>
-              <td><Info text={r.note || 'Sin notas'} /></td>
+              <td><NoteCell tooltip value={r.note} onSave={note => update(r.id, { note }, 'editar nota')} /></td>
               <td><Del onClick={() => remove(r.id)} /></td>
             </tr>
           ))}

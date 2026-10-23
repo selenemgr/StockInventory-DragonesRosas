@@ -4,14 +4,14 @@ import { useTable } from '../lib/useTable'
 import { dateTime, money } from '../lib/format'
 import type { MoneyType } from '../lib/moneyType'
 import type { Drug, DrugSale, Finance, Fine, Heist, House, ToolItem, ToolMove, Weapon, WeaponMove } from '../lib/types'
-import { Del, Empty, MoneySelect, MoneyTag, Stat } from '../components/ui'
+import { Del, Empty, NoteCell, MoneySelect, MoneyTag, Stat } from '../components/ui'
 
 const TYPES: Finance['type'][] = ['ingreso', 'retiro', 'inversion']
 const TONE: Record<Finance['type'], string> = { deposito: 'good', ingreso: 'good', retiro: 'bad', gasto: 'bad', inversion: 'warn' }
 
 export default function Finanzas() {
   const { user, userName } = useSession()
-  const { rows, error, insert, remove } = useTable<Finance>('finance')
+  const { rows, error, insert, update, remove } = useTable<Finance>('finance')
   const sales = useTable<DrugSale>('drug_sales')
   const drugs = useTable<Drug>('drugs', 'name', true)
   const weapons = useTable<Weapon>('weapons')
@@ -168,7 +168,7 @@ export default function Finanzas() {
             <tr key={r.source + r.id}>
               <td>{dateTime(r.created_at)}</td><td>{userName(r.user_id)}</td><td><span className={`tag ${tone(r.type)}`}>{SOURCE_LABEL[r.source]}{r.type}</span></td>
               <td><MoneyTag type={r.money_type} /></td>
-              <td className={`amt ${tone(r.type)}`}>{money(r.amount)}</td><td>{r.note}</td><td><Del onClick={() => removeRow(r)} /></td>
+              <td className={`amt ${tone(r.type)}`}>{money(r.amount)}</td><td>{r.source === 'finance' ? <NoteCell value={r.note} onSave={note => update(r.id, { note }, 'editar nota')} /> : r.note}</td><td><Del onClick={() => removeRow(r)} /></td>
             </tr>
           ))}
         </tbody>

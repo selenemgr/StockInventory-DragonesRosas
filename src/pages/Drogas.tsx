@@ -5,7 +5,7 @@ import { dateTime, money } from '../lib/format'
 import type { MoneyType } from '../lib/moneyType'
 import type { Drug, DrugMaterial, DrugMaterialMove, DrugSale } from '../lib/types'
 import { ItemStock } from '../components/ItemStock'
-import { Del, Empty, Info, MoneySelect, MoneyTag, Stat } from '../components/ui'
+import { Del, Empty, NoteCell, MoneySelect, MoneyTag, Stat } from '../components/ui'
 
 const DRUG_EMOJIS = ['💊', '🌿', '🍃', '🍄', '💉', '❄️', '🧪', '🔥', '🍬', '🌱', '🌵', '🍁', '💎', '⚗️', '🧂', '☁️']
 
@@ -115,7 +115,7 @@ function SemillasHojas() {
               <td><span className={`tag ${MV_TONE[r.kind]}`}>{r.kind === 'ingreso' ? 'Ingreso' : 'Consumo'}</span></td>
               <td>{userName(r.user_id)}</td><td>{matLabel(r.material_id)}</td>
               <td className={`amt ${MV_TONE[r.kind]}`}>{r.kind === 'ingreso' ? '+' : '−'}{r.qty}</td>
-              <td><Info text={r.note || 'Sin notas'} /></td>
+              <td><NoteCell tooltip value={r.note} onSave={note => moves.update(r.id, { note }, 'editar nota')} /></td>
               <td><Del onClick={() => removeMove(r)} /></td>
             </tr>
           ))}

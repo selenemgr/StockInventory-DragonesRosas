@@ -4,7 +4,7 @@ import { useTable } from '../lib/useTable'
 import { dateTime, money } from '../lib/format'
 import type { MoneyType } from '../lib/moneyType'
 import type { ToolItem, ToolMove } from '../lib/types'
-import { Del, Empty, Info, MoneySelect, MoneyTag, Stat } from './ui'
+import { Del, Empty, NoteCell, MoneySelect, MoneyTag, Stat } from './ui'
 
 type Kind = ToolMove['kind']
 const TONE: Record<Kind, string> = { ingreso: 'good', retiro: 'bad', compra: 'warn' }
@@ -58,7 +58,7 @@ export function ItemStock({ itemsTable, movesTable, emoji, noun, title }: { item
             <tr key={x.id}>
               <td>{emoji} {x.name}</td>
               <td><input className="cell" type="number" defaultValue={x.stock} key={'s' + x.stock} onBlur={e => Number(e.target.value) !== x.stock && items.update(x.id, { stock: Number(e.target.value) }, `modificar stock de ${x.name}`)} /></td>
-              <td>{x.note}</td>
+              <td><NoteCell value={x.note} onSave={note => items.update(x.id, { note }, 'editar nota')} /></td>
               <td><Del onClick={() => items.remove(x.id)} /></td>
             </tr>
           ))}
@@ -112,7 +112,7 @@ export function ItemStock({ itemsTable, movesTable, emoji, noun, title }: { item
               <td>{r.kind === 'compra' ? money(r.unit_price) : '—'}</td>
               <td>{r.kind === 'compra' ? money(r.qty * Number(r.unit_price)) : '—'}</td>
               <td>{r.kind === 'compra' ? <MoneyTag type={r.money_type} /> : '—'}</td>
-              <td><Info text={r.note || 'Sin notas'} /></td>
+              <td><NoteCell tooltip value={r.note} onSave={note => moves.update(r.id, { note }, 'editar nota')} /></td>
               <td><Del onClick={() => removeMove(r)} /></td>
             </tr>
           ))}

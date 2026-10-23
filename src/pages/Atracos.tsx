@@ -3,7 +3,7 @@ import { useSession } from '../context/Session'
 import { useTable } from '../lib/useTable'
 import { dateTime, money } from '../lib/format'
 import type { Heist } from '../lib/types'
-import { Del, Empty, MoneyTag, Stat, UserMultiSelect } from '../components/ui'
+import { Del, Empty, NoteCell, MoneyTag, Stat, UserMultiSelect } from '../components/ui'
 
 type LootType = Heist['loot_type']
 const LOOT_ITEMS = [
@@ -63,7 +63,7 @@ export default function Atracos() {
               <td>{dateTime(r.created_at)}</td><td>{userName(r.user_id)}</td><td>{r.name}</td>
               <td>{r.loot_type === 'materiales' ? itemLabel(r.loot_item) : money(r.loot)}</td>
               <td>{r.loot_type === 'materiales' ? <span className="tag warn">📦 Materiales</span> : <MoneyTag type={r.loot_type} />}</td>
-              <td>{r.participants}</td><td>{r.weapons_used}</td><td>{r.note}</td><td><Del onClick={() => heists.remove(r.id)} /></td>
+              <td>{r.participants}</td><td>{r.weapons_used}</td><td><NoteCell value={r.note} onSave={note => heists.update(r.id, { note }, 'editar nota')} /></td><td><Del onClick={() => heists.remove(r.id)} /></td>
             </tr>
           ))}
         </tbody>

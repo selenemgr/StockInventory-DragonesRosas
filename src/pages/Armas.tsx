@@ -4,7 +4,7 @@ import { useTable } from '../lib/useTable'
 import { dateTime, money } from '../lib/format'
 import type { MoneyType } from '../lib/moneyType'
 import type { Weapon, WeaponMove, WeaponPart, WeaponPartMove } from '../lib/types'
-import { Del, Empty, Info, MoneySelect, MoneyTag, Stat } from '../components/ui'
+import { Del, Empty, NoteCell, MoneySelect, MoneyTag, Stat } from '../components/ui'
 
 type Tab = 'stock' | 'fabricacion' | 'ventas'
 
@@ -84,7 +84,7 @@ function Stock({ weapons, moves }: Tables) {
                 <select value={w.emoji} title="Cambiar emoji" onChange={e => weapons.update(w.id, { emoji: e.target.value }, `cambiar emoji de ${w.name}`)}><EmojiOptions /></select> {w.name}
               </td>
               <td><input className="cell" type="number" defaultValue={w.stock} key={'s' + w.stock} onBlur={e => Number(e.target.value) !== w.stock && weapons.update(w.id, { stock: Number(e.target.value) }, `modificar stock de ${w.name}`)} /></td>
-              <td>{w.note}</td>
+              <td><NoteCell value={w.note} onSave={note => weapons.update(w.id, { note }, 'editar nota')} /></td>
               <td><Del onClick={() => weapons.remove(w.id)} /></td>
             </tr>
           ))}
@@ -128,7 +128,7 @@ function Stock({ weapons, moves }: Tables) {
               <td><span className={`tag ${TONE[r.kind]}`}>{r.kind === 'ingreso' ? 'Ingreso' : 'Retiro'}</span></td>
               <td>{userName(r.user_id)}</td><td>{weaponName(r.weapon_id)}</td>
               <td className={`amt ${TONE[r.kind]}`}>{r.kind === 'ingreso' ? '+' : '−'}{r.qty}</td>
-              <td><Info text={r.note || 'Sin notas'} /></td>
+              <td><NoteCell tooltip value={r.note} onSave={note => moves.update(r.id, { note }, 'editar nota')} /></td>
               <td><Del onClick={() => removeWeaponMove(weapons, moves, r)} /></td>
             </tr>
           ))}
@@ -209,7 +209,7 @@ function Ventas({ weapons, moves }: Tables) {
               <td>{Number(s.unit_price) ? money(s.unit_price) : '—'}</td>
               <td className={`amt ${s.kind === 'venta' ? 'good' : ''}`}>{Number(s.unit_price) ? money(s.qty * Number(s.unit_price)) : '—'}</td>
               <td><MoneyTag type={s.money_type} /></td>
-              <td><Info text={s.note || 'Sin notas'} /></td>
+              <td><NoteCell tooltip value={s.note} onSave={note => moves.update(s.id, { note }, 'editar nota')} /></td>
               <td><Del onClick={() => removeWeaponMove(weapons, moves, s)} /></td>
             </tr>
           ))}
@@ -260,7 +260,7 @@ function Fabricacion() {
             <tr key={p.id}>
               <td>⚙️ {p.name}</td>
               <td><input className="cell" type="number" defaultValue={p.stock} key={'s' + p.stock} onBlur={e => Number(e.target.value) !== p.stock && parts.update(p.id, { stock: Number(e.target.value) }, `modificar stock de ${p.name}`)} /></td>
-              <td>{p.note}</td>
+              <td><NoteCell value={p.note} onSave={note => parts.update(p.id, { note }, 'editar nota')} /></td>
               <td><Del onClick={() => parts.remove(p.id)} /></td>
             </tr>
           ))}
@@ -303,7 +303,7 @@ function Fabricacion() {
               <td><span className={`tag ${TONE[r.kind]}`}>{r.kind === 'ingreso' ? 'Ingreso' : 'Retiro'}</span></td>
               <td>{userName(r.user_id)}</td><td>⚙️ {partName(r.part_id)}</td>
               <td className={`amt ${TONE[r.kind]}`}>{r.kind === 'ingreso' ? '+' : '−'}{r.qty}</td>
-              <td><Info text={r.note || 'Sin notas'} /></td>
+              <td><NoteCell tooltip value={r.note} onSave={note => moves.update(r.id, { note }, 'editar nota')} /></td>
               <td><Del onClick={() => removePartMove(r)} /></td>
             </tr>
           ))}
