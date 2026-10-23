@@ -4,11 +4,12 @@ import { useTable } from '../lib/useTable'
 import { dateTime, money } from '../lib/format'
 import type { MoneyType } from '../lib/moneyType'
 import type { Drug, DrugMaterial, DrugMaterialMove, DrugSale } from '../lib/types'
+import { ItemStock } from '../components/ItemStock'
 import { Del, Empty, Info, MoneySelect, MoneyTag, Stat } from '../components/ui'
 
 const DRUG_EMOJIS = ['💊', '🌿', '🍃', '🍄', '💉', '❄️', '🧪', '🔥', '🍬', '🌱', '🌵', '🍁', '💎', '⚗️', '🧂', '☁️']
 
-type Tab = 'hechas' | 'materia'
+type Tab = 'hechas' | 'materia' | 'materiales'
 
 export default function Drogas() {
   const [tab, setTab] = useState<Tab>('hechas')
@@ -17,8 +18,9 @@ export default function Drogas() {
       <div className="tabs left" role="tablist">
         <button role="tab" aria-selected={tab === 'hechas'} className={tab === 'hechas' ? 'active' : ''} onClick={() => setTab('hechas')}>💊 Drogas</button>
         <button role="tab" aria-selected={tab === 'materia'} className={tab === 'materia' ? 'active' : ''} onClick={() => setTab('materia')}>🌱 Semillas y hojas</button>
+        <button role="tab" aria-selected={tab === 'materiales'} className={tab === 'materiales' ? 'active' : ''} onClick={() => setTab('materiales')}>🧪 Materiales</button>
       </div>
-      {tab === 'hechas' ? <DrogasHechas /> : <SemillasHojas />}
+      {tab === 'hechas' ? <DrogasHechas /> : tab === 'materia' ? <SemillasHojas /> : <ItemStock itemsTable="drug_supplies" movesTable="drug_supply_moves" emoji="🧪" noun="material" title="Materiales" />}
     </>
   )
 }

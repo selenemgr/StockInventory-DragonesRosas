@@ -9,6 +9,8 @@ export interface DrugMaterialMove { id: string; user_id: string; material_id: st
 export interface House { id: string; user_id: string | null; qty: number; loot: number; note: string; created_at: string }
 export interface WeaponPart { id: string; name: string; stock: number; note: string; created_at: string }
 export interface WeaponPartMove { id: string; user_id: string; part_id: string; kind: 'ingreso' | 'retiro'; qty: number; note: string; created_at: string }
+export interface ToolItem { id: string; name: string; stock: number; note: string; created_at: string }
+export interface ToolMove { id: string; user_id: string; item_id: string; kind: 'ingreso' | 'retiro' | 'compra'; qty: number; unit_price: number; money_type: MoneyType; note: string; created_at: string }
 export interface Weapon { id: string; emoji: string; name: string; stock: number; value: number; note: string; created_at: string }
 export interface WeaponMove { id: string; user_id: string; weapon_id: string; money_type: MoneyType; kind: 'ingreso' | 'retiro' | 'compra' | 'venta'; qty: number; unit_price: number; note: string; created_at: string }
 export interface Heist { id: string; user_id: string | null; loot_type: MoneyType | 'materiales'; loot_item: string; name: string; loot: number; participants: string; weapons_used: string; note: string; created_at: string }

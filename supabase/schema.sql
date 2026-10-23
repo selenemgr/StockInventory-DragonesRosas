@@ -89,6 +89,60 @@ create table if not exists weapon_part_moves (
   note text default '',
   created_at timestamptz default now()
 );
+create table if not exists drug_supplies (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  stock int not null default 0,
+  note text default '',
+  created_at timestamptz default now()
+);
+create table if not exists drug_supply_moves (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references users(id),
+  item_id uuid references drug_supplies(id) on delete cascade,
+  kind text not null check (kind in ('ingreso','retiro','compra')),
+  qty int not null,
+  unit_price numeric not null default 0,
+  money_type text not null default 'limpio' check (money_type in ('limpio','negro')),
+  note text default '',
+  created_at timestamptz default now()
+);
+create table if not exists tools (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  stock int not null default 0,
+  note text default '',
+  created_at timestamptz default now()
+);
+create table if not exists tool_moves (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references users(id),
+  item_id uuid references tools(id) on delete cascade,
+  kind text not null check (kind in ('ingreso','retiro','compra')),
+  qty int not null,
+  unit_price numeric not null default 0,
+  money_type text not null default 'limpio' check (money_type in ('limpio','negro')),
+  note text default '',
+  created_at timestamptz default now()
+);
+create table if not exists tool_parts (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  stock int not null default 0,
+  note text default '',
+  created_at timestamptz default now()
+);
+create table if not exists tool_part_moves (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references users(id),
+  item_id uuid references tool_parts(id) on delete cascade,
+  kind text not null check (kind in ('ingreso','retiro','compra')),
+  qty int not null,
+  unit_price numeric not null default 0,
+  money_type text not null default 'limpio' check (money_type in ('limpio','negro')),
+  note text default '',
+  created_at timestamptz default now()
+);
 create table if not exists heists (
   id uuid primary key default gen_random_uuid(),
   name text not null,
@@ -153,7 +207,7 @@ create table if not exists logs (
 do $$
 declare t text;
 begin
-  foreach t in array array['users','finance','drugs','drug_sales','drug_materials','drug_material_moves','weapons','weapon_moves','weapon_parts','weapon_part_moves','heists','fines','inventory','materials','houses','logs']
+  foreach t in array array['users','finance','drugs','drug_sales','drug_materials','drug_material_moves','weapons','weapon_moves','weapon_parts','weapon_part_moves','tools','tool_moves','tool_parts','tool_part_moves','drug_supplies','drug_supply_moves','heists','fines','inventory','materials','houses','logs']
   loop
     execute format('alter table %I enable row level security', t);
     execute format('drop policy if exists "open" on %I', t);

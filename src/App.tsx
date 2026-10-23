@@ -5,6 +5,7 @@ import Login from './pages/Login'
 import Finanzas from './pages/Finanzas'
 import Drogas from './pages/Drogas'
 import Armas from './pages/Armas'
+import Herramientas from './pages/Herramientas'
 import Atracos from './pages/Atracos'
 import Casas from './pages/Casas'
 import Materiales from './pages/Materiales'
@@ -16,6 +17,7 @@ const tabs = [
   ['/finanzas', '💰 Finanzas'],
   ['/drogas', '🌿 Drogas'],
   ['/armas', '🔫 Armas'],
+  ['/herramientas', '🧰 Herramientas'],
   ['/atracos', '💎 Atracos'],
   ['/casas', '🏠 Casas'],
   ['/materiales', '♻️ Materiales'],
@@ -54,6 +56,7 @@ export default function App() {
           <Route path="/finanzas" element={<Finanzas />} />
           <Route path="/drogas" element={<Drogas />} />
           <Route path="/armas" element={<Armas />} />
+          <Route path="/herramientas" element={<Herramientas />} />
           <Route path="/atracos" element={<Atracos />} />
           <Route path="/casas" element={<Casas />} />
           <Route path="/materiales" element={<Materiales />} />

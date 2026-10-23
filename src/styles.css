@@ -14,7 +14,7 @@
 }
 * { box-sizing: border-box; }
 body { margin: 0; font-family: system-ui, sans-serif; background: var(--bg); color: var(--text); }
-header { background: linear-gradient(90deg, var(--pink-600), var(--pink-500)); padding: 10px 16px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+header { position: sticky; top: 0; z-index: 20; background: linear-gradient(90deg, var(--pink-600), var(--pink-500)); padding: 10px 16px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
 header { color: #2a1822; }
 header h1 { margin: 0; font-size: 1.2rem; color: #2a1822; }
 nav { display: flex; flex-wrap: wrap; gap: 4px; flex: 1; }

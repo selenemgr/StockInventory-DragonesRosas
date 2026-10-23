@@ -3,7 +3,7 @@ import { useSession } from '../context/Session'
 import { useTable } from '../lib/useTable'
 import { dateTime, money } from '../lib/format'
 import type { MoneyType } from '../lib/moneyType'
-import type { Drug, DrugSale, Finance, Fine, Heist, House, Weapon, WeaponMove } from '../lib/types'
+import type { Drug, DrugSale, Finance, Fine, Heist, House, ToolItem, ToolMove, Weapon, WeaponMove } from '../lib/types'
 import { Del, Empty, MoneySelect, MoneyTag, Stat } from '../components/ui'
 
 const TYPES: Finance['type'][] = ['ingreso', 'retiro', 'inversion']
@@ -18,6 +18,12 @@ export default function Finanzas() {
   const heists = useTable<Heist>('heists')
   const houses = useTable<House>('houses')
   const fines = useTable<Fine>('fines')
+  const tools = useTable<ToolItem>('tools', 'name', true)
+  const toolMoves = useTable<ToolMove>('tool_moves')
+  const toolParts = useTable<ToolItem>('tool_parts', 'name', true)
+  const toolPartMoves = useTable<ToolMove>('tool_part_moves')
+  const supplies = useTable<ToolItem>('drug_supplies', 'name', true)
+  const supplyMoves = useTable<ToolMove>('drug_supply_moves')
   const weaponMoves = useTable<WeaponMove>('weapon_moves')
   const [type, setType] = useState<Finance['type']>('ingreso')
   const [moneyType, setMoneyType] = useState<MoneyType>('limpio')
@@ -36,12 +42,18 @@ export default function Finanzas() {
   // Multas: las multas marcadas como pagadas restan de la caja de dinero limpio
   const paidFines = fines.rows.filter(f => f.kind === 'multa' && f.paid)
   const multasPagadas = paidFines.reduce((a, f) => a + Number(f.amount), 0)
+  // Herramientas y piezas: solo las compras afectan a las finanzas (gasto)
+  const toolBuys = toolMoves.rows.filter(m => m.kind === 'compra')
+  const partBuys = toolPartMoves.rows.filter(m => m.kind === 'compra')
+  const comprasHerramientas = [...toolBuys, ...partBuys].reduce((a, m) => a + m.qty * Number(m.unit_price), 0)
+  const supplyBuys = supplyMoves.rows.filter(m => m.kind === 'compra')
+  const comprasMateriales = supplyBuys.reduce((a, m) => a + m.qty * Number(m.unit_price), 0)
   const metido = sum(['deposito', 'ingreso'])
   const invertido = sum(['inversion'])
   const salido = sum(['retiro', 'gasto'])
 
-  type Source = 'finance' | 'drug' | 'weapon' | 'heist' | 'house' | 'fine'
-  type Row = { id: string; created_at: string; user_id: string; type: Finance['type'] | 'venta droga' | 'venta arma' | 'atraco' | 'casas' | 'multa pagada'; amount: number; note: string; source: Source; money_type: MoneyType }
+  type Source = 'finance' | 'drug' | 'weapon' | 'heist' | 'house' | 'fine' | 'tool' | 'toolpart' | 'supply'
+  type Row = { id: string; created_at: string; user_id: string; type: Finance['type'] | 'venta droga' | 'venta arma' | 'atraco' | 'casas' | 'multa pagada' | 'compra herramienta' | 'compra pieza' | 'compra material'; amount: number; note: string; source: Source; money_type: MoneyType }
   const weaponName = (id: string) => weapons.rows.find(w => w.id === id)?.name ?? 'Arma'
   const drugName = (id: string) => { const d = drugs.rows.find(x => x.id === id); return d ? `${d.emoji} ${d.name}` : 'droga eliminada' }
   const history: Row[] = [
@@ -66,8 +78,20 @@ export default function Finanzas() {
       id: f.id, created_at: f.created_at, user_id: f.user_id, type: 'multa pagada' as const, amount: Number(f.amount),
       note: f.reason || 'Multa pagada', source: 'fine' as Source, money_type: 'limpio' as MoneyType,
     })),
+    ...toolBuys.map(m => ({
+      id: m.id, created_at: m.created_at, user_id: m.user_id, type: 'compra herramienta' as const, amount: m.qty * Number(m.unit_price),
+      note: `${tools.rows.find(x => x.id === m.item_id)?.name ?? 'Herramienta'} x${m.qty}${m.note ? ` — ${m.note}` : ''}`, source: 'tool' as Source, money_type: m.money_type,
+    })),
+    ...partBuys.map(m => ({
+      id: m.id, created_at: m.created_at, user_id: m.user_id, type: 'compra pieza' as const, amount: m.qty * Number(m.unit_price),
+      note: `${toolParts.rows.find(x => x.id === m.item_id)?.name ?? 'Pieza'} x${m.qty}${m.note ? ` — ${m.note}` : ''}`, source: 'toolpart' as Source, money_type: m.money_type,
+    })),
+    ...supplyBuys.map(m => ({
+      id: m.id, created_at: m.created_at, user_id: m.user_id, type: 'compra material' as const, amount: m.qty * Number(m.unit_price),
+      note: `${supplies.rows.find(x => x.id === m.item_id)?.name ?? 'Material'} x${m.qty}${m.note ? ` — ${m.note}` : ''}`, source: 'supply' as Source, money_type: m.money_type,
+    })),
   ].sort((a, b) => b.created_at.localeCompare(a.created_at))
-  const cajaDe = (mt: MoneyType) => history.filter(r => (r.money_type ?? 'limpio') === mt).reduce((a, r) => a + (r.source === 'fine' || (r.source === 'finance' && ['retiro', 'gasto', 'inversion'].includes(r.type)) ? -1 : 1) * Number(r.amount), 0)
+  const cajaDe = (mt: MoneyType) => history.filter(r => (r.money_type ?? 'limpio') === mt).reduce((a, r) => a + (r.source === 'fine' || r.source === 'tool' || r.source === 'toolpart' || r.source === 'supply' || (r.source === 'finance' && ['retiro', 'gasto', 'inversion'].includes(r.type)) ? -1 : 1) * Number(r.amount), 0)
   const cajaLimpio = cajaDe('limpio')
   const cajaNegro = cajaDe('negro')
   /** Elimina el registro de origen y revierte su efecto (stock de droga/arma). Finanzas se recalcula sola. */
@@ -76,6 +100,14 @@ export default function Finanzas() {
     if (r.source === 'heist') return heists.remove(r.id)
     if (r.source === 'house') return houses.remove(r.id)
     if (r.source === 'fine') return fines.remove(r.id)
+    if (r.source === 'tool' || r.source === 'toolpart' || r.source === 'supply') {
+      const moves = r.source === 'tool' ? toolMoves : r.source === 'toolpart' ? toolPartMoves : supplyMoves
+      const items = r.source === 'tool' ? tools : r.source === 'toolpart' ? toolParts : supplies
+      const m = moves.rows.find(x => x.id === r.id)
+      const it = m && items.rows.find(x => x.id === m.item_id)
+      if (m && it) void items.update(it.id, { stock: it.stock - m.qty }, `revertir compra de ${it.name} x${m.qty}`)
+      return moves.remove(r.id)
+    }
     if (r.source === 'drug') {
       const s = sales.rows.find(x => x.id === r.id)
       const d = s && drugs.rows.find(x => x.id === s.drug_id)
@@ -87,9 +119,9 @@ export default function Finanzas() {
     if (m && w) void weapons.update(w.id, { stock: w.stock + m.qty }, `revertir venta de ${w.name} x${m.qty}`)
     return weaponMoves.remove(r.id)
   }
-  const SOURCE_TONE: Partial<Record<Row['type'], string>> = { 'venta droga': 'violet', 'venta arma': 'cyan', atraco: 'orange', casas: 'blue', 'multa pagada': 'rose' }
+  const SOURCE_TONE: Partial<Record<Row['type'], string>> = { 'venta droga': 'violet', 'venta arma': 'cyan', atraco: 'orange', casas: 'blue', 'multa pagada': 'rose', 'compra herramienta': 'bad', 'compra pieza': 'bad', 'compra material': 'bad' }
   const tone = (t: Row['type']) => SOURCE_TONE[t] ?? TONE[t as Finance['type']]
-  const SOURCE_LABEL: Record<Source, string> = { finance: '', drug: '🌿 ', weapon: '🔫 ', heist: '💎 ', house: '🏠 ', fine: '🚔 ' }
+  const SOURCE_LABEL: Record<Source, string> = { finance: '', drug: '🌿 ', weapon: '🔫 ', heist: '💎 ', house: '🏠 ', fine: '🚔 ', tool: '🧰 ', toolpart: '🧰 ', supply: '🧪 ' }
 
   return (
     <>
@@ -99,6 +131,8 @@ export default function Finanzas() {
         <Stat label="📥 Dinero Ingresado" value={money(metido)} tone="good" />
         <Stat label="📈 Invertido" value={money(invertido)} tone="warn" />
         <Stat label="📤 Retirado" value={money(salido)} tone="bad" />
+        <Stat label="🧰 Compras de herramientas" value={money(comprasHerramientas)} tone="bad" />
+        <Stat label="🧪 Compras de materiales" value={money(comprasMateriales)} tone="bad" />
         <Stat label="💵 Dinero limpio" value={money(cajaLimpio)} tone={cajaLimpio >= 0 ? 'deep' : 'bad'} />
         <Stat label="🖤 Dinero negro" value={money(cajaNegro)} tone={cajaNegro >= 0 ? 'deep' : 'bad'} />
         </section>
