@@ -193,6 +193,15 @@ create table if not exists houses (
 );
 alter table houses add column if not exists user_id uuid references users(id);
 alter table houses add column if not exists qty int not null default 1;
+create table if not exists deals (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references users(id),
+  gang text not null,
+  color text not null default '#e58fb0',
+  our_benefits text default '',
+  their_benefits text default '',
+  created_at timestamptz default now()
+);
 create table if not exists logs (
   id uuid primary key default gen_random_uuid(),
   user_id uuid references users(id),
@@ -207,7 +216,7 @@ create table if not exists logs (
 do $$
 declare t text;
 begin
-  foreach t in array array['users','finance','drugs','drug_sales','drug_materials','drug_material_moves','weapons','weapon_moves','weapon_parts','weapon_part_moves','tools','tool_moves','tool_parts','tool_part_moves','drug_supplies','drug_supply_moves','heists','fines','inventory','materials','houses','logs']
+  foreach t in array array['users','finance','drugs','drug_sales','drug_materials','drug_material_moves','weapons','weapon_moves','weapon_parts','weapon_part_moves','tools','tool_moves','tool_parts','tool_part_moves','drug_supplies','drug_supply_moves','heists','fines','inventory','materials','houses','deals','logs']
   loop
     execute format('alter table %I enable row level security', t);
     execute format('drop policy if exists "open" on %I', t);

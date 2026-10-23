@@ -8,6 +8,7 @@ import Armas from './pages/Armas'
 import Herramientas from './pages/Herramientas'
 import Atracos from './pages/Atracos'
 import Casas from './pages/Casas'
+import Tratos from './pages/Tratos'
 import Materiales from './pages/Materiales'
 import Multas from './pages/Multas'
 import Inventario from './pages/Inventario'
@@ -20,6 +21,7 @@ const tabs = [
   ['/herramientas', '🧰 Herramientas'],
   ['/atracos', '💎 Atracos'],
   ['/casas', '🏠 Casas'],
+  ['/tratos', '🤝 Tratos'],
   ['/materiales', '♻️ Materiales'],
   ['/multas', '🚔 Multas'],
   ['/inventario', '🎒 Inventario'],
@@ -59,6 +61,7 @@ export default function App() {
           <Route path="/herramientas" element={<Herramientas />} />
           <Route path="/atracos" element={<Atracos />} />
           <Route path="/casas" element={<Casas />} />
+          <Route path="/tratos" element={<Tratos />} />
           <Route path="/materiales" element={<Materiales />} />
           <Route path="/multas" element={<Multas />} />
           <Route path="/inventario" element={<Inventario />} />

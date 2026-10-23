@@ -6,6 +6,7 @@ export interface Drug { id: string; emoji: string; name: string; stock: number; 
 export interface DrugSale { id: string; money_type: MoneyType; kind: 'ingreso' | 'venta'; user_id: string; drug_id: string; qty: number; unit_price: number; created_at: string }
 export interface DrugMaterial { id: string; name: string; kind: 'semilla' | 'hoja'; stock: number }
 export interface DrugMaterialMove { id: string; user_id: string; material_id: string; kind: 'ingreso' | 'consumo'; qty: number; note: string; created_at: string }
+export interface Deal { id: string; user_id: string | null; gang: string; color: string; our_benefits: string; their_benefits: string; created_at: string }
 export interface House { id: string; user_id: string | null; qty: number; loot: number; note: string; created_at: string }
 export interface WeaponPart { id: string; name: string; stock: number; note: string; created_at: string }
 export interface WeaponPartMove { id: string; user_id: string; part_id: string; kind: 'ingreso' | 'retiro'; qty: number; note: string; created_at: string }

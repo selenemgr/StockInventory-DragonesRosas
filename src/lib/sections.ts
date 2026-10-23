@@ -19,6 +19,7 @@ export const SECTION_LABEL: Record<string, string> = {
   tool_part_moves: '🧰 Herramientas · fabricación (mov.)',
   heists: '💎 Atracos',
   houses: '🏠 Casas',
+  deals: '🤝 Tratos',
   materials: '♻️ Materiales',
   fines: '🚔 Multas',
   inventory: '🎒 Inventario',

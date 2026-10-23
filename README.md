@@ -63,6 +63,7 @@ El "login" **no es seguridad**: solo sirve para atribuir cada acción a una pers
 | **🔫 Armas** | Tab *Stock*: cantidad de cada arma, ingreso/retiro e historial. Tab *Fabricación*: piezas para fabricar armas, con ingreso/retiro. Tab *Ventas de armas*: valor de cada arma, compra/venta e historial. |
 | **💎 Atracos** | Botín en dinero limpio, dinero negro o materiales; participantes (selector múltiple de miembros), armas usadas y nota. |
 | **🏠 Casas** | Cantidad de casas robadas y botín conseguido (siempre dinero limpio). |
+| **🤝 Tratos** | Tratos con otras bandas: nombre, color, nuestros beneficios y los suyos (editables). |
 | **♻️ Materiales** | Ingresos y retiros de chatarra 🔩, plástico 🧴 y pólvora 💥, con stock y notas. |
 | **🚔 Multas** | Multas por miembro con casilla *Pagada*. |
 | **🎒 Inventario** | Objetos por miembro, con traspaso de cantidad entre miembros. |
