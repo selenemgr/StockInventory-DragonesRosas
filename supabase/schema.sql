@@ -182,7 +182,7 @@ create table if not exists materials (
   created_at timestamptz default now()
 );
 alter table materials drop constraint if exists materials_material_check;
-alter table materials add constraint materials_material_check check (material in ('chatarra','plastico','polvora'));
+alter table materials add constraint materials_material_check check (material in ('chatarra','plastico','polvora','lingotes'));
 create table if not exists houses (
   id uuid primary key default gen_random_uuid(),
   name text not null,

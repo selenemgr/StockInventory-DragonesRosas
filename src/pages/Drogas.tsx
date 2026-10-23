@@ -167,7 +167,7 @@ function DrogasHechas() {
     <>
       <section className="stats stack">
         <Stat label="💰 Valor estimado en venta" value={money(stockValue)} />
-        {drugs.rows.map(d => <Stat key={d.id} label={`${d.emoji} ${d.name}`} value={`${d.stock} en stock`} />)}
+        {drugs.rows.map(d => <Stat key={d.id} label={`${d.emoji} ${d.name}`} value={d.stock} />)}
       </section>
 
       <h2>Tabla de valores</h2>

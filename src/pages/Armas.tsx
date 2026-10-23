@@ -70,7 +70,7 @@ function Stock({ weapons, moves }: Tables) {
   return (
     <>
       <section className="stats stack">
-        {weapons.rows.map(w => <Stat key={w.id} label={`${w.emoji} ${w.name}`} value={`${w.stock} en stock`} />)}
+        {weapons.rows.map(w => <Stat key={w.id} label={`${w.emoji} ${w.name}`} value={w.stock} />)}
       </section>
 
       <h2>Armas</h2>
@@ -161,7 +161,7 @@ function Ventas({ weapons, moves }: Tables) {
     <>
       <section className="stats stack">
         <Stat label="💰 Valor estimado de las armas" value={money(totalValue)} tone="good" />
-        {weapons.rows.map(w => <Stat key={w.id} label={`${w.emoji} ${w.name}`} value={`${w.stock} en stock`} />)}
+        {weapons.rows.map(w => <Stat key={w.id} label={`${w.emoji} ${w.name}`} value={w.stock} />)}
       </section>
 
       <h2>Tabla de valores</h2>
@@ -248,7 +248,7 @@ function Fabricacion() {
     <>
       {parts.error && <p className="error">{parts.error}</p>}
       <section className="stats stack">
-        {parts.rows.map(p => <Stat key={p.id} label={`⚙️ ${p.name}`} value={`${p.stock} en stock`} />)}
+        {parts.rows.map(p => <Stat key={p.id} label={`⚙️ ${p.name}`} value={p.stock} />)}
       </section>
 
       <h2>Piezas</h2>

@@ -9,6 +9,7 @@ const MATERIALS: Record<Material['material'], { emoji: string; label: string }> 
   chatarra: { emoji: '🔩', label: 'Chatarra' },
   plastico: { emoji: '🧴', label: 'Plástico' },
   polvora: { emoji: '💥', label: 'Pólvora' },
+  lingotes: { emoji: '🪙', label: 'Lingotes' },
 }
 const TONE: Record<Material['kind'], string> = { ingreso: 'good', retiro: 'bad' }
 
@@ -28,7 +29,7 @@ export default function Materiales() {
       {error && <p className="error">{error}</p>}
       <section className="stats">
         {(Object.keys(MATERIALS) as Material['material'][]).map(m => (
-          <Stat key={m} label={`${MATERIALS[m].emoji} ${MATERIALS[m].label} en stock`} value={stock(m)} tone={stock(m) >= 0 ? 'good' : 'bad'} />
+          <Stat key={m} label={`${MATERIALS[m].emoji} ${MATERIALS[m].label}`} value={stock(m)} tone={stock(m) >= 0 ? 'good' : 'bad'} />
         ))}
       </section>
 

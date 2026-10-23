@@ -16,5 +16,5 @@ export interface WeaponMove { id: string; user_id: string; weapon_id: string; mo
 export interface Heist { id: string; user_id: string | null; loot_type: MoneyType | 'materiales'; loot_item: string; name: string; loot: number; participants: string; weapons_used: string; note: string; created_at: string }
 export interface Fine { id: string; user_id: string; kind: 'multa' | 'paga'; amount: number; reason: string; paid: boolean; created_at: string }
 export interface InvItem { id: string; user_id: string; item: string; qty: number }
-export interface Material { id: string; user_id: string; kind: 'ingreso' | 'retiro'; material: 'chatarra' | 'plastico' | 'polvora'; qty: number; note: string; created_at: string }
+export interface Material { id: string; user_id: string; kind: 'ingreso' | 'retiro'; material: 'chatarra' | 'plastico' | 'polvora' | 'lingotes'; qty: number; note: string; created_at: string }
 export interface LogRow { id: string; user_id: string | null; user_name: string | null; action: string; entity: string; detail: Record<string, unknown>; created_at: string }

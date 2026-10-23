@@ -11,6 +11,7 @@ const LOOT_ITEMS = [
   { value: 'chatarra', label: '🔩 Chatarra' },
   { value: 'plastico', label: '🧴 Plástico' },
   { value: 'polvora', label: '💥 Pólvora' },
+  { value: 'lingotes', label: '🪙 Lingotes' },
 ]
 const itemLabel = (v: string) => LOOT_ITEMS.find(i => i.value === v)?.label ?? v
 

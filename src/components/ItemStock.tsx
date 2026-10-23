@@ -46,7 +46,7 @@ export function ItemStock({ itemsTable, movesTable, emoji, noun, title }: { item
     <>
       {items.error && <p className="error">{items.error}</p>}
       <section className="stats stack">
-        {items.rows.map(x => <Stat key={x.id} label={`${emoji} ${x.name}`} value={`${x.stock} en stock`} />)}
+        {items.rows.map(x => <Stat key={x.id} label={`${emoji} ${x.name}`} value={x.stock} />)}
       </section>
 
       <h2>{title}</h2>
